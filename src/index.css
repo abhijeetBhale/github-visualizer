@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  /* A dark radial gradient from slate-800 at the top to slate-900 at the bottom */
+  background-color: #0f172a; /* bg-slate-900 */
+  background-image: radial-gradient(ellipse at top, #1e293b, #0f172a);
+  color: #f1f5f9; /* text-slate-100 */
+  min-height: 100vh;
+}
