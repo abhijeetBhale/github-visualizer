@@ -4,6 +4,7 @@ import { Dashboard } from './components/core/Dashboard';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
 import { ErrorMessage } from './components/common/ErrorMessage';
 import { fetchAllRepoData } from './api/github';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
   const [repoData, setRepoData] = useState(null);
@@ -45,22 +46,63 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-50 p-4 sm:p-8">
-      <main className="max-w-7xl mx-auto">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">
-            GitHub Repository Visualizer
-          </h1>
-          <p className="mt-2 text-lg text-gray-400">
-            Enter a public repository URL to see its stats visualized.
-          </p>
+    <div className="min-h-screen text-slate-100 p-6 md:p-12 font-sans selection:bg-cyan-500/30">
+      <main className="max-w-6xl mx-auto space-y-12">
+        <header className="text-center space-y-4">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent"
+          >
+            Repo Visualizer
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-lg text-slate-400 max-w-2xl mx-auto"
+          >
+            Explore GitHub repositories through interactive and modern visualizations.
+            Paste a URL below to get started.
+          </motion.p>
         </header>
 
         <RepoInput onFetch={handleFetchData} isLoading={isLoading} />
 
-        {isLoading && <LoadingSpinner />}
-        {error && <ErrorMessage message={error} />}
-        {repoData && !isLoading && <Dashboard data={repoData} />}
+        <AnimatePresence mode="wait">
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              key="loader"
+            >
+              <LoadingSpinner />
+            </motion.div>
+          )}
+
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              key="error"
+            >
+              <ErrorMessage message={error} />
+            </motion.div>
+          )}
+
+          {repoData && !isLoading && (
+             <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              key="dashboard"
+             >
+                <Dashboard data={repoData} />
+             </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );
