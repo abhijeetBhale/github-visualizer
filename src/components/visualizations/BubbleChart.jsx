@@ -47,7 +47,7 @@ export const BubbleChart = ({ fileList, repoName }) => {
     hierarchicalData.name = repoName;
 
     const root = d3.hierarchy(hierarchicalData)
-      .sum(d => 1) // Give every node a value of 1 for sizing
+      .sum(() => 1) // Give every node a value of 1 for sizing
       .sort((a, b) => b.value - a.value);
 
     const nodes = root.descendants();
