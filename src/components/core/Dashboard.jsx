@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { LanguageChart } from '../visualizations/LanguageChart';
 import { CommitHistoryGraph } from '../visualizations/CommitHistoryGraph';
-// Import the new BubbleChart instead of FileTree
-import { BubbleChart } from '../visualizations/BubbleChart';
+// Import the new SunburstChart instead of BubbleChart
+import { SunburstChart } from '../visualizations/SunburstChart';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -43,12 +43,12 @@ export const Dashboard = ({ data }) => {
         )}
       </div>
 
-      {/* Column 2: The new Bubble Chart */}
+      {/* Column 2: The new Sunburst Chart */}
       <div className="lg:col-span-2">
         {tree && (
           <motion.div variants={itemVariants}>
-            {/* Replace FileTree with BubbleChart */}
-            <BubbleChart fileList={tree} repoName={repoDetails.name} />
+            {/* Replace BubbleChart with SunburstChart */}
+            <SunburstChart fileList={tree} repoName={repoDetails.name} />
           </motion.div>
         )}
       </div>

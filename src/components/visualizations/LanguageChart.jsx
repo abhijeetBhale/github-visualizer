@@ -1,8 +1,10 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useState } from 'react';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF4560'];
 
 export const LanguageChart = ({ languageData }) => {
+  const [activeIndex, setActiveIndex] = useState(null);
   // Convert { JavaScript: 1024 } to [{ name: 'JavaScript', value: 1024 }]
   const chartData = Object.entries(languageData)
     .map(([name, value]) => ({ name, value }))
@@ -16,12 +18,23 @@ export const LanguageChart = ({ languageData }) => {
     );
   }
 
+  const onPieEnter = (_, index) => {
+    setActiveIndex(index);
+  };
+
+  const onPieLeave = () => {
+    setActiveIndex(null);
+  };
+
   return (
     <div className="w-full h-[400px] bg-slate-800/50 backdrop-blur-lg border border-slate-700 p-4 rounded-xl shadow-lg">
       <h3 className="text-xl font-bold mb-4 text-slate-100">Language Breakdown</h3>
       <ResponsiveContainer>
         <PieChart>
           <Pie
+            activeIndex={activeIndex}
+            inactiveShape={{ opacity: 0.7 }}
+            activeShape={{ r: '85%' }}
             data={chartData}
             cx="50%"
             cy="50%"
@@ -30,6 +43,8 @@ export const LanguageChart = ({ languageData }) => {
             fill="#8884d8"
             dataKey="value"
             nameKey="name"
+            onMouseEnter={onPieEnter}
+            onMouseLeave={onPieLeave}
             label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
           >
             {chartData.map((entry, index) => (

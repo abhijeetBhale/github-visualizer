@@ -83,11 +83,46 @@ export const BubbleChart = ({ fileList, repoName }) => {
           .on("end", dragended));
 
     // Apply the dynamic radius to the circle's 'r' attribute
-    node.append('circle')
+    const circles = node.append('circle')
       .attr('r', getRadius)
       .style('fill', getColor)
       .style('stroke', '#0f172a')
       .style('stroke-width', 2);
+
+    // Add a subtle breathing animation to the circles
+    circles.transition()
+        .duration(1500)
+        .delay((d, i) => i * 5)
+        .ease(d3.easeCubicInOut)
+        .attrTween("r", d => {
+            const i = d3.interpolate(getRadius(d) - 2, getRadius(d) + 2);
+            return t => d.r = i(t);
+        })
+        .transition()
+        .duration(1500)
+        .ease(d3.easeCubicInOut)
+        .attrTween("r", d => {
+            const i = d3.interpolate(getRadius(d) + 2, getRadius(d) - 2);
+            return t => d.r = i(t);
+        })
+        .on("end", function repeat() {
+            d3.select(this).transition()
+                .duration(1500)
+                .ease(d3.easeCubicInOut)
+                .attrTween("r", d => {
+                    const i = d3.interpolate(getRadius(d) - 2, getRadius(d) + 2);
+                    return t => d.r = i(t);
+                })
+                .transition()
+                .duration(1500)
+                .ease(d3.easeCubicInOut)
+                .attrTween("r", d => {
+                    const i = d3.interpolate(getRadius(d) + 2, getRadius(d) - 2);
+                    return t => d.r = i(t);
+                })
+                .on("end", repeat);
+        });
+
 
     node.append('text')
       .attr('dy', '0.3em')
@@ -109,13 +144,19 @@ export const BubbleChart = ({ fileList, repoName }) => {
         .style('color', 'white');
 
     node.on('mouseover', function(event, d) {
+        d3.select(this).select('circle').transition()
+          .duration(200)
+          .attr('r', getRadius(d) * 1.5);
         tooltip.text(d.data.name);
         return tooltip.style('visibility', 'visible');
     })
     .on('mousemove', function(event) {
         return tooltip.style('top', (event.pageY - 10) + 'px').style('left', (event.pageX + 10) + 'px');
     })
-    .on('mouseout', function() {
+    .on('mouseout', function(event, d) {
+        d3.select(this).select('circle').transition()
+            .duration(200)
+            .attr('r', getRadius(d));
         return tooltip.style('visibility', 'hidden');
     });
 

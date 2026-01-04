@@ -21,7 +21,7 @@ export const CommitHistoryGraph = ({ commitData }) => {
             contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '0.5rem' }}
           />
           <Legend />
-          <Bar dataKey="commits" fill="#00C49F" />
+          <Bar dataKey="commits" fill="#00C49F" animationDuration={1500} />
         </BarChart>
       </ResponsiveContainer>
     </div>
